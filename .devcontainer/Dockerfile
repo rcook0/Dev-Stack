@@ -9,10 +9,18 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     openjdk-17-jdk maven gradle \
     nodejs npm yarn \
     sqlite3 postgresql-client \
-    libta-lib0 libta-lib0-dev \
     graphviz \
     verilator gtkwave yosys iverilog \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Build and install TA-Lib from source
+RUN curl -L http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz -o /tmp/ta-lib-0.4.0-src.tar.gz \
+    && tar -xzf /tmp/ta-lib-0.4.0-src.tar.gz -C /tmp \
+    && cd /tmp/ta-lib-0.4.0 \
+    && ./configure --prefix=/usr \
+    && make -j$(nproc) \
+    && make install \
+    && rm -rf /tmp/ta-lib*
 
 # Python packages
 RUN pip3 install --no-cache-dir \
