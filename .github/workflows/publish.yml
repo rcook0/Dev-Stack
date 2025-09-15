@@ -25,4 +25,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/devlab:latest
+          tags: ghcr.io/${{ github.repository_owner }}/dev-stack:latest
