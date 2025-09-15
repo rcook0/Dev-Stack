@@ -22,6 +22,12 @@ RUN curl -sSL https://github.com/TA-Lib/ta-lib/releases/download/v0.6.4/ta-lib-0
     && make install \
     && rm -rf /tmp/ta-lib*
 
+# Install Python + pip
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    python3 python3-dev python3-venv python3-distutils python3-pip \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -sS https://bootstrap.pypa.io/get-pip.py | python3
+
 # Install Python packages (with CPU builds for ML libs)
 RUN python3 -m pip install --upgrade pip setuptools wheel
 
