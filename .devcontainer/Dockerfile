@@ -1,7 +1,7 @@
 # Base image: lightweight but dev-friendly
 FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 
-# Install system packages
+# Install system packages 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential cmake ninja-build clang lldb gdb ccache \
     git curl wget unzip zip htop tmux ncdu iftop \
