@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential cmake ninja-build clang lldb gdb ccache \
     git curl wget unzip zip htop tmux ncdu iftop \
-    python3 python3-pip python3-venv python3-dev ipython \
+    python3 python3-pip python3-venv python3-dev \
     openjdk-17-jdk maven gradle \
     nodejs npm yarn \
     sqlite3 postgresql-client \
