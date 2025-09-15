@@ -5,11 +5,10 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential wget curl python3 python3-pip python3-dev \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Build and install TA-Lib C library
-RUN curl -sSL https://downloads.sourceforge.net/project/ta-lib/ta-lib/0.4.0/ta-lib-0.4.0-src.tar.gz -o /tmp/ta-lib-0.4.0-src.tar.gz \
-    && ls -lh /tmp/ta-lib-0.4.0-src.tar.gz \
-    && tar -xzf /tmp/ta-lib-0.4.0-src.tar.gz -C /tmp \
-    && cd /tmp/ta-lib-0.4.0 \
+# Build and install TA-Lib (C library) from GitHub
+RUN curl -sSL https://github.com/TA-Lib/ta-lib/releases/download/v0.6.4/ta-lib-0.6.4-src.tar.gz -o /tmp/ta-lib-0.6.4-src.tar.gz \
+    && tar -xzf /tmp/ta-lib-0.6.4-src.tar.gz -C /tmp \
+    && cd /tmp/ta-lib-0.6.4 \
     && ./configure --prefix=/usr \
     && make -j$(nproc) \
     && make install \
