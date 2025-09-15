@@ -9,7 +9,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     openjdk-17-jdk maven gradle \
     nodejs npm yarn \
     sqlite3 postgresql-client \
-    ta-lib \
+    libta-lib0 libta-lib0-dev \
     graphviz \
     verilator gtkwave yosys iverilog \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
