@@ -6,7 +6,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Build and install TA-Lib C library
-RUN curl -L http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz -o /tmp/ta-lib-0.4.0-src.tar.gz \
+RUN curl -sSL https://downloads.sourceforge.net/project/ta-lib/ta-lib/0.4.0/ta-lib-0.4.0-src.tar.gz -o /tmp/ta-lib-0.4.0-src.tar.gz \
+    && ls -lh /tmp/ta-lib-0.4.0-src.tar.gz \
     && tar -xzf /tmp/ta-lib-0.4.0-src.tar.gz -C /tmp \
     && cd /tmp/ta-lib-0.4.0 \
     && ./configure --prefix=/usr \
