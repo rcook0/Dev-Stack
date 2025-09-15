@@ -26,6 +26,7 @@ jobs:
       - name: Run sanity tests
         run: |
           docker run --rm test/dev-stack:ci bash -c "
+            python3 -c 'import talib, numpy as np; print('RSI:', talib.RSI(np.arange(1, 10), timeperiod=3))' &&
             echo '--- Python ---' &&
             python3 -c 'import sys; print(sys.version)' &&
             python3 -c 'import numpy, pandas; print(\"NumPy:\", numpy.__version__, \"Pandas:\", pandas.__version__)' &&
