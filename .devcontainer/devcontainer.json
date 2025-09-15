@@ -1,24 +1,23 @@
 {
-  "name": "Universal Dev Lab",
+  "name": "Dev-Stack",
   "build": {
     "dockerfile": "Dockerfile"
   },
   "settings": {
-    "terminal.integrated.shell.linux": "/bin/bash"
+    "terminal.integrated.defaultProfile.linux": "bash"
   },
   "extensions": [
     "ms-python.python",
-    "ms-vscode.cpptools",
     "ms-toolsai.jupyter",
+    "ms-vscode.cpptools",
     "ms-vscode.cmake-tools",
     "ms-azuretools.vscode-docker",
-    "ms-vscode.live-server",
-    "vscode-icons-team.vscode-icons",
-    "ms-vscode-remote.remote-containers",
     "ms-vscode.gitlens",
     "redhat.java",
     "vscjava.vscode-java-pack",
-    "tamasfe.even-better-toml"
+    "tamasfe.even-better-toml",
+    "ms-vscode.live-server",
+    "vscode-icons-team.vscode-icons"
   ],
   "remoteUser": "vscode",
   "postCreateCommand": "sudo ldconfig"
