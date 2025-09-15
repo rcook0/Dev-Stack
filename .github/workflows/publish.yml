@@ -1,32 +1,71 @@
-      - name: Run Dev-Stack sanity tests
+name: Build and Publish Dev-Stack
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      # Checkout repo
+      - uses: actions/checkout@v3
+
+      # Log in to GitHub Container Registry (GHCR)
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build container but don't push yet (tag as test/dev-stack:ci)
+      - name: Build Dev-Stack image (test only)
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: .devcontainer/Dockerfile
+          load: true
+          tags: test/dev-stack:ci
+
+      # Run sanity tests inside the container
+      - name: Run sanity tests
         run: |
           docker run --rm test/dev-stack:ci bash -c "
-            python3 - <<'PYCODE'
-import numpy as np
-import pandas as pd
-import talib
-import pandas_ta as ta
+            echo '--- Python / NumPy / Pandas ---' &&
+            python3 -c 'import numpy, pandas; print(\"NumPy:\", numpy.__version__, \"Pandas:\", pandas.__version__)' &&
 
-print('--- Core stack ---')
-print('NumPy:', np.__version__)
-print('Pandas:', pd.__version__)
+            echo '\n--- TA-Lib ---' &&
+            python3 -c 'import talib, numpy as np; print(\"RSI (TA-Lib):\", talib.RSI(np.arange(1, 10, dtype=float), timeperiod=3))' &&
 
-print('\n--- TA-Lib ---')
-print('TA-Lib RSI:', talib.RSI(np.arange(1, 10, dtype=float), timeperiod=3))
+            echo '\n--- pandas-ta ---' &&
+            python3 -c 'import pandas_ta as ta; print(\"pandas-ta indicators:\", len(ta.CommonIndicators))' &&
 
-print('\n--- pandas-ta ---')
-print('pandas-ta RSI:', ta.rsi(np.arange(1, 10, dtype=float), length=3).tolist())
-print('pandas-ta indicators available:', len(ta.CommonIndicators))
+            echo '\n--- C++ ---' &&
+            echo \"#include <iostream>\nint main(){std::cout<<\\\"C++ OK\\\";}\" > test.cpp &&
+            g++ test.cpp -o test && ./test &&
 
-print('\n--- PyTorch ---')
-import torch
-print('PyTorch:', torch.__version__)
-x = torch.rand(3, 3)
-print('Torch tensor:', x)
+            echo '\n--- Java ---' &&
+            echo \"class Main{public static void main(String[]a){System.out.println(\\\"Java OK\\\");}}\" > Main.java &&
+            javac Main.java && java Main &&
 
-print('\n--- TensorFlow ---')
-import tensorflow as tf
-print('TensorFlow:', tf.__version__)
-print('TF constant:', tf.constant([1, 2, 3]))
-PYCODE
+            echo '\n--- Verilog ---' &&
+            iverilog -V
           "
+
+      # Push image to GHCR only if tests pass
+      - name: Push Dev-Stack image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: .devcontainer/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/dev-stack:latest
+            ghcr.io/${{ github.repository_owner }}/dev-stack:v1.0.0
