@@ -1,3 +1,6 @@
+# Base image: Microsoft DevContainers Ubuntu 22.04
+FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
+
 # Install system packages
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     build-essential cmake ninja-build clang lldb gdb ccache \
@@ -10,7 +13,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     verilator gtkwave yosys iverilog \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Build and install TA-Lib from source
+# Build and install TA-Lib (C library) from source
 RUN curl -L http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz -o /tmp/ta-lib-0.4.0-src.tar.gz \
     && tar -xzf /tmp/ta-lib-0.4.0-src.tar.gz -C /tmp \
     && cd /tmp/ta-lib-0.4.0 \
@@ -19,7 +22,7 @@ RUN curl -L http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz -o
     && make install \
     && rm -rf /tmp/ta-lib*
 
-# Python packages
+# Install Python packages
 RUN pip3 install --no-cache-dir \
     numpy pandas matplotlib scipy scikit-learn statsmodels sympy \
     jupyterlab ipywidgets jupyter_contrib_nbextensions \
@@ -29,3 +32,13 @@ RUN pip3 install --no-cache-dir \
     psycopg2-binary sqlalchemy \
     plotly seaborn pygraphviz \
     ipython ipykernel
+
+# Install Mermaid CLI for diagrams
+RUN npm install -g @mermaid-js/mermaid-cli
+
+# Set Java environment variables
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+# Default user is vscode (set by base image)
+USER vscode
