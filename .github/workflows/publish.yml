@@ -24,5 +24,9 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v4
         with:
+          context: .
+          file: .devcontainer/Dockerfile   # <— point directly at your Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/Dev-Stack:latest
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/dev-stack:latest
+            ghcr.io/${{ github.repository_owner }}/dev-stack:v1.0.0
