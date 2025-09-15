@@ -1,28 +1,18 @@
-name: Dev-Stack TA-Lib Test
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Build Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: .devcontainer/Dockerfile
-          load: true
-          tags: test/dev-stack:ci
-
-      - name: Run TA-Lib sanity test
+      - name: Run TA-Lib & pandas-ta sanity tests
         run: |
           docker run --rm test/dev-stack:ci bash -c "
-            python3 -c 'import talib, numpy as np; print(\"RSI:\", talib.RSI(np.arange(1, 10), timeperiod=3)))'
+            python3 - <<'PYCODE'
+import numpy as np
+import talib
+import pandas_ta as ta
+
+# TA-Lib RSI
+print('TA-Lib RSI:', talib.RSI(np.arange(1, 10, dtype=float), timeperiod=3))
+
+# pandas-ta RSI
+print('pandas-ta RSI:', ta.rsi(np.arange(1, 10, dtype=float), length=3).tolist())
+
+# pandas-ta coverage
+print('pandas-ta indicators available:', len(ta.CommonIndicators))
+PYCODE
           "
