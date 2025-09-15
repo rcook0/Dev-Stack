@@ -9,6 +9,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     openjdk-17-jdk maven gradle \
     nodejs npm yarn \
     sqlite3 postgresql-client \
+    ta-lib \
     graphviz \
     verilator gtkwave yosys iverilog \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -19,7 +20,7 @@ RUN pip3 install --no-cache-dir \
     jupyterlab ipywidgets jupyter_contrib_nbextensions \
     torch torchvision torchaudio \
     tensorflow \
-    talib-binary pandas-ta ccxt zipline-reloaded \
+    TA-Lib pandas-ta ccxt zipline-reloaded \
     psycopg2-binary sqlalchemy \
     plotly seaborn pygraphviz \
     ipykernel
