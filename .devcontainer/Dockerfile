@@ -28,6 +28,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     && rm -rf /var/lib/apt/lists/* \
     && curl -sS https://bootstrap.pypa.io/get-pip.py | python3
 
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3
+
 # Install Python packages (with CPU builds for ML libs)
 RUN python3 -m pip install --upgrade pip setuptools wheel
 
