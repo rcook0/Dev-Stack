@@ -23,6 +23,8 @@ RUN curl -sSL https://github.com/TA-Lib/ta-lib/releases/download/v0.6.4/ta-lib-0
     && rm -rf /tmp/ta-lib*
 
 # Install Python packages (with CPU builds for ML libs)
+RUN python3 -m pip install --upgrade pip setuptools wheel
+
 RUN pip3 install --no-cache-dir \
     numpy pandas matplotlib scipy scikit-learn statsmodels sympy \
     jupyterlab ipywidgets jupyter_contrib_nbextensions \
