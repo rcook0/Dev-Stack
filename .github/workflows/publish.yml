@@ -1,0 +1,28 @@
+name: Dev-Stack TA-Lib Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: .devcontainer/Dockerfile
+          load: true
+          tags: test/dev-stack:ci
+
+      - name: Run TA-Lib sanity test
+        run: |
+          docker run --rm test/dev-stack:ci bash -c "
+            python3 -c 'import talib, numpy as np; print(\"RSI:\", talib.RSI(np.arange(1, 10), timeperiod=3)))'
+          "
