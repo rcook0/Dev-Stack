@@ -15,4 +15,4 @@ RUN curl -sSL https://github.com/TA-Lib/ta-lib/releases/download/v0.6.4/ta-lib-0
     && rm -rf /tmp/ta-lib*
 
 # Install Python bindings
-RUN pip3 install --no-cache-dir TA-Lib pandas-ta
+RUN pip3 install TA-Lib pandas-ta
