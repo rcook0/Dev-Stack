@@ -1,18 +1,32 @@
-      - name: Run TA-Lib & pandas-ta sanity tests
+      - name: Run Dev-Stack sanity tests
         run: |
           docker run --rm test/dev-stack:ci bash -c "
             python3 - <<'PYCODE'
 import numpy as np
+import pandas as pd
 import talib
 import pandas_ta as ta
 
-# TA-Lib RSI
+print('--- Core stack ---')
+print('NumPy:', np.__version__)
+print('Pandas:', pd.__version__)
+
+print('\n--- TA-Lib ---')
 print('TA-Lib RSI:', talib.RSI(np.arange(1, 10, dtype=float), timeperiod=3))
 
-# pandas-ta RSI
+print('\n--- pandas-ta ---')
 print('pandas-ta RSI:', ta.rsi(np.arange(1, 10, dtype=float), length=3).tolist())
-
-# pandas-ta coverage
 print('pandas-ta indicators available:', len(ta.CommonIndicators))
+
+print('\n--- PyTorch ---')
+import torch
+print('PyTorch:', torch.__version__)
+x = torch.rand(3, 3)
+print('Torch tensor:', x)
+
+print('\n--- TensorFlow ---')
+import tensorflow as tf
+print('TensorFlow:', tf.__version__)
+print('TF constant:', tf.constant([1, 2, 3]))
 PYCODE
           "
