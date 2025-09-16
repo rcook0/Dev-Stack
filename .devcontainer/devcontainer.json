@@ -1,7 +1,7 @@
 {
   "name": "Dev Stack Workspace",
   "image": "ghcr.io/rcook0/dev-stack:dev",
-  "workspaceFolder": "/workspace",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "remoteUser": "root",
   "remoteEnv": {
     "PATH": "/opt/venv/bin:${containerEnv:PATH}"
