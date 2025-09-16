@@ -22,5 +22,6 @@
     git config --global color.diff auto && \
     git config --global color.status auto && \
     git config --global color.interactive auto && \
-    .github/scripts/sanity.sh || true"
+    .github/scripts/sanity.sh || true && \
+    source ~/.bashrc"
 }
