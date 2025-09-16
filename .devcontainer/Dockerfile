@@ -37,6 +37,7 @@ RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir \
     numpy pandas matplotlib scipy scikit-learn statsmodels sympy \
     TA-Lib \
+    pandas-ta-classic \
     ccxt zipline-reloaded \
     psycopg2-binary sqlalchemy plotly seaborn pygraphviz \
     jupyterlab ipywidgets ipykernel ipython jupyter_contrib_nbextensions
