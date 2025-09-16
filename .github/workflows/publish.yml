@@ -66,12 +66,15 @@ jobs:
       - name: Run sanity tests on runtime
         run: |
           docker run --rm ghcr.io/${{ github.repository_owner }}/dev-stack:runtime bash -c "
-            echo '--- NumPy / Pandas ---' &&
+            echo '--- Python ---' &&
+            python3 --version &&
+
+            echo '\n--- NumPy / Pandas ---' &&
             python3 -c 'import numpy, pandas; print(\"NumPy\", numpy.__version__, \"Pandas\", pandas.__version__)' &&
 
             echo '\n--- TA-Lib ---' &&
-            python3 -c 'import talib, numpy as np; print(\"RSI\", talib.RSI(np.arange(1, 10, dtype=float), timeperiod=3))' &&
+            python3 -c 'import talib, numpy as np; print(\"RSI sample:\", talib.RSI(np.arange(1, 10, dtype=float), timeperiod=3))' &&
 
-            echo '\n--- pandas-ta ---' &&
-            python3 -c 'import pandas_ta as ta; print(\"Indicators available:\", len(ta.CommonIndicators))'
+            echo '\n--- Pandas TA Classic ---' &&
+            python3 -c 'import pandas_ta_classic as ta; print(\"Indicators available:\", len(dir(ta)))'
           "
