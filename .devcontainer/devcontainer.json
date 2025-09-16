@@ -1,24 +1,20 @@
 {
-  "name": "Dev-Stack",
-  "build": {
-    "dockerfile": "Dockerfile"
+  "name": "Dev Stack Workspace",
+  "image": "ghcr.io/rcook0/dev-stack:dev",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "root",
+  "remoteEnv": {
+    "PATH": "/opt/venv/bin:${containerEnv:PATH}"
   },
-  "settings": {
-    "terminal.integrated.defaultProfile.linux": "bash"
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "ms-vscode.cpptools",
+        "ms-azuretools.vscode-docker"
+      ]
+    }
   },
-  "extensions": [
-    "ms-python.python",
-    "ms-toolsai.jupyter",
-    "ms-vscode.cpptools",
-    "ms-vscode.cmake-tools",
-    "ms-azuretools.vscode-docker",
-    "ms-vscode.gitlens",
-    "redhat.java",
-    "vscjava.vscode-java-pack",
-    "tamasfe.even-better-toml",
-    "ms-vscode.live-server",
-    "vscode-icons-team.vscode-icons"
-  ],
-  "remoteUser": "vscode",
-  "postCreateCommand": "sudo ldconfig"
+  "postCreateCommand": "python3 -m pip --version && python3 -c 'import numpy, pandas, talib; print(\"NumPy\", numpy.__version__, \"Pandas\", pandas.__version__)'"
 }
