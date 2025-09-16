@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip
-RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3
+# RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3
 
 # TA-Lib C library
 RUN curl -sSL https://github.com/TA-Lib/ta-lib/releases/download/v0.6.4/ta-lib-0.6.4-src.tar.gz -o /tmp/ta-lib.tar.gz \
