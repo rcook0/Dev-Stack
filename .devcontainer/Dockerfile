@@ -17,9 +17,6 @@ RUN apt-get update && apt-get install -y \
     verilator gtkwave yosys iverilog \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip
-# RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python3
-
 # TA-Lib C library
 RUN curl -sSL https://github.com/TA-Lib/ta-lib/releases/download/v0.6.4/ta-lib-0.6.4-src.tar.gz -o /tmp/ta-lib.tar.gz \
     && tar -xzf /tmp/ta-lib.tar.gz -C /tmp \
@@ -29,12 +26,17 @@ RUN curl -sSL https://github.com/TA-Lib/ta-lib/releases/download/v0.6.4/ta-lib-0
     && make install \
     && rm -rf /tmp/ta-lib*
 
-# Python stacks
-RUN pip3 install --no-cache-dir numpy
-RUN pip3 install --no-cache-dir \
-    pandas matplotlib scipy scikit-learn statsmodels sympy \
+# --- Python virtual environment ---
+RUN python3 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Upgrade pip inside venv
+RUN pip install --no-cache-dir --upgrade pip
+
+# Python stacks (installed into venv)
+RUN pip install --no-cache-dir \
+    numpy pandas matplotlib scipy scikit-learn statsmodels sympy \
     TA-Lib \
-    --pre pandas-ta \
     ccxt zipline-reloaded \
     psycopg2-binary sqlalchemy plotly seaborn pygraphviz \
     jupyterlab ipywidgets ipykernel ipython jupyter_contrib_nbextensions
@@ -54,16 +56,15 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Runtime dependencies only
 RUN apt-get update && apt-get install -y \
-    python3 python3-pip python3-venv python3-distutils \
+    python3 python3-venv python3-pip \
     libatlas-base-dev libopenblas-dev liblapack-dev \
     sqlite3 postgresql-client \
     graphviz \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy Python env from dev stage
-COPY --from=dev /usr/local/lib/python3.12 /usr/local/lib/python3.12
-COPY --from=dev /usr/local/bin /usr/local/bin
-COPY --from=dev /usr/lib /usr/lib
+# Copy venv from dev stage
+COPY --from=dev /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /workspace
 CMD ["python3"]
