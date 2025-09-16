@@ -16,5 +16,5 @@
       ]
     }
   },
-  "postCreateCommand": "echo \"alias gpull='git fetch origin && git pull'\" >> ~/.bashrc && echo \"gpush() { git add . && git commit -m \\\"${1:-update}\\\" && git push; }\" >> ~/.bashrc && echo \"alias gstat='git status -sb'\" >> ~/.bashrc && .github/scripts/sanity.sh || true"
+  "postCreateCommand": "cat /workspaces/${localWorkspaceFolderBasename}/.bash_aliases >> ~/.bashrc && .github/scripts/sanity.sh || true"
 }
