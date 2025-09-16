@@ -41,6 +41,7 @@ jobs:
           file: .devcontainer/Dockerfile
           target: dev
           push: true
+          driver: docker-container
           tags: |
             ghcr.io/${{ github.repository_owner }}/dev-stack:dev
             ghcr.io/${{ github.repository_owner }}/dev-stack:dev-${{ env.TAG }}
@@ -55,6 +56,7 @@ jobs:
           file: .devcontainer/Dockerfile
           target: runtime
           push: true
+          driver: docker-container
           tags: |
             ghcr.io/${{ github.repository_owner }}/dev-stack:runtime
             ghcr.io/${{ github.repository_owner }}/dev-stack:runtime-${{ env.TAG }}
