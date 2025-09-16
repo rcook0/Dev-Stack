@@ -57,6 +57,14 @@ alias gprm='gh pr merge --squash --delete-branch'
 # --- GitHub Repo Ops ---
 alias gclone='gh repo clone'
 
+# --- Status & History ---
+alias gstat='git status -sb'
+alias glog='git log --oneline --graph --decorate -n 10'
+alias ghist='git reflog --date=short --pretty=oneline'
+alias gdiff='git diff --color-words'
+alias gshow='git show HEAD --stat --color'
+alias gpretty='git log --graph --oneline --decorate --all'
+
 # --- Interactive Helpers ---
 gri() {
   git rebase -i HEAD~${1:-3}
