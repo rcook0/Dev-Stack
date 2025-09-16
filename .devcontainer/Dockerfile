@@ -1,7 +1,7 @@
 # =========================
 # Stage 1: Build / Dev image
 # =========================
-FROM ubuntu:22.04 AS dev
+FROM ubuntu:24.04 AS dev
 ENV DEBIAN_FRONTEND=noninteractive
 
 # System packages for development
@@ -32,17 +32,11 @@ RUN curl -sSL https://github.com/TA-Lib/ta-lib/releases/download/v0.6.4/ta-lib-0
 # Python stacks
 RUN pip3 install --no-cache-dir \
     numpy pandas matplotlib scipy scikit-learn statsmodels sympy \
-    TA-Lib ccxt zipline-reloaded \
+    TA-Lib \
+    --pre pandas-ta \
+    ccxt zipline-reloaded \
     psycopg2-binary sqlalchemy plotly seaborn pygraphviz \
     jupyterlab ipywidgets ipykernel ipython jupyter_contrib_nbextensions
-
-RUN pip3 install --no-cache-dir --pre pandas-ta
-
-# Optional ML stack (comment out if not needed)
-# RUN pip3 install --no-cache-dir \
-#     torch==2.3.1+cpu torchvision==0.18.1+cpu torchaudio==2.3.1+cpu \
-#       --index-url https://download.pytorch.org/whl/cpu \
-#     tensorflow-cpu==2.16.1
 
 # Mermaid CLI
 RUN npm install -g @mermaid-js/mermaid-cli --legacy-peer-deps
@@ -54,7 +48,7 @@ CMD ["bash"]
 # =========================
 # Stage 2: Runtime image
 # =========================
-FROM ubuntu:22.04 AS runtime
+FROM ubuntu:24.04 AS runtime
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Runtime dependencies only
@@ -66,7 +60,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy Python env from dev stage
-COPY --from=dev /usr/local/lib/python3.10 /usr/local/lib/python3.10
+COPY --from=dev /usr/local/lib/python3.12 /usr/local/lib/python3.12
 COPY --from=dev /usr/local/bin /usr/local/bin
 COPY --from=dev /usr/lib /usr/lib
 
