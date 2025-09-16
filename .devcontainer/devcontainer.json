@@ -16,5 +16,5 @@
       ]
     }
   },
-  "postCreateCommand": "python3 -c 'import numpy, pandas, talib, pandas_ta_classic; print(\"Dev-Stack OK: NumPy\", numpy.__version__, \"Pandas\", pandas.__version__)'"
+  "postCreateCommand": "./sanity.sh || true"
 }
