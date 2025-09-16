@@ -62,19 +62,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # --- Sanity tests on runtime image ---
-      - name: Run sanity tests on runtime
+# --- Run sanity.sh inside runtime image ---
+      - name: Run sanity tests
         run: |
-          docker run --rm ghcr.io/${{ github.repository_owner }}/dev-stack:runtime bash -c "
-            echo '--- Python ---' &&
-            python3 --version &&
-
-            echo '\n--- NumPy / Pandas ---' &&
-            python3 -c 'import numpy, pandas; print(\"NumPy\", numpy.__version__, \"Pandas\", pandas.__version__)' &&
-
-            echo '\n--- TA-Lib ---' &&
-            python3 -c 'import talib, numpy as np; print(\"RSI sample:\", talib.RSI(np.arange(1, 10, dtype=float), timeperiod=3))' &&
-
-            echo '\n--- Pandas TA Classic ---' &&
-            python3 -c 'import pandas_ta_classic as ta; print(\"Indicators available:\", len(dir(ta)))'
-          "
+          docker run --rm \
+            -v ${{ github.workspace }}/sanity.sh:/workspace/sanity.sh \
+            ghcr.io/${{ github.repository_owner }}/dev-stack:runtime \
+            bash -c "chmod +x /workspace/sanity.sh && cd /workspace && ./sanity.sh"
+    
