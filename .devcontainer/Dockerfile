@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/base:ubuntu-22.04
+FROM ubuntu:latest
 
 # Install system packages + Python + BLAS/LAPACK for pandas
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
