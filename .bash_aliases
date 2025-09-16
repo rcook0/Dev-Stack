@@ -8,3 +8,4 @@ gpush() {
   git push
 }
 alias gstat='git status -sb'
+alias glog='git log --oneline --graph --decorate -n 10'
