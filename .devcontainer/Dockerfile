@@ -32,9 +32,11 @@ RUN curl -sSL https://github.com/TA-Lib/ta-lib/releases/download/v0.6.4/ta-lib-0
 # Python stacks
 RUN pip3 install --no-cache-dir \
     numpy pandas matplotlib scipy scikit-learn statsmodels sympy \
-    TA-Lib pandas-ta==0.3.14b0 ccxt zipline-reloaded \
+    TA-Lib ccxt zipline-reloaded \
     psycopg2-binary sqlalchemy plotly seaborn pygraphviz \
     jupyterlab ipywidgets ipykernel ipython jupyter_contrib_nbextensions
+
+RUN pip3 install --no-cache-dir --pre pandas-ta
 
 # Optional ML stack (comment out if not needed)
 # RUN pip3 install --no-cache-dir \
