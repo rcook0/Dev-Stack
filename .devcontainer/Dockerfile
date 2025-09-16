@@ -30,8 +30,9 @@ RUN curl -sSL https://github.com/TA-Lib/ta-lib/releases/download/v0.6.4/ta-lib-0
     && rm -rf /tmp/ta-lib*
 
 # Python stacks
+RUN pip3 install --no-cache-dir numpy
 RUN pip3 install --no-cache-dir \
-    numpy pandas matplotlib scipy scikit-learn statsmodels sympy \
+    pandas matplotlib scipy scikit-learn statsmodels sympy \
     TA-Lib \
     --pre pandas-ta \
     ccxt zipline-reloaded \
