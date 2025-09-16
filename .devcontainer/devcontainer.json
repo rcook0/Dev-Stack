@@ -16,12 +16,5 @@
       ]
     }
   },
-  "postCreateCommand": "cat /workspaces/${localWorkspaceFolderBasename}/.bash_aliases >> ~/.bashrc && \
-    git config --global color.ui auto && \
-    git config --global color.branch auto && \
-    git config --global color.diff auto && \
-    git config --global color.status auto && \
-    git config --global color.interactive auto && \
-    .github/scripts/sanity.sh || true && \
-    source ~/.bashrc"
+  "postCreateCommand": "/bin/bash .devcontainer/postCreate.sh"
 }
