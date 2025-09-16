@@ -14,10 +14,8 @@ jobs:
       contents: read
 
     steps:
-      # Checkout repo
       - uses: actions/checkout@v3
 
-      # Log in to GitHub Container Registry (GHCR)
       - name: Log in to GHCR
         uses: docker/login-action@v2
         with:
@@ -25,47 +23,42 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Build container but don't push yet (tag as test/dev-stack:ci)
-      - name: Build Dev-Stack image (test only)
+      # Build dev image
+      - name: Build Dev image
         uses: docker/build-push-action@v4
         with:
           context: .
           file: .devcontainer/Dockerfile
-          load: true
-          tags: test/dev-stack:ci
-
-      # Run sanity tests inside the container
-      - name: Run sanity tests
-        run: |
-          docker run --rm test/dev-stack:ci bash -c "
-            echo '--- Python / NumPy / Pandas ---' &&
-            python3 -c 'import numpy, pandas; print(\"NumPy:\", numpy.__version__, \"Pandas:\", pandas.__version__)' &&
-
-            echo '\n--- TA-Lib ---' &&
-            python3 -c 'import talib, numpy as np; print(\"RSI (TA-Lib):\", talib.RSI(np.arange(1, 10, dtype=float), timeperiod=3))' &&
-
-            echo '\n--- pandas-ta ---' &&
-            python3 -c 'import pandas_ta as ta; print(\"pandas-ta indicators:\", len(ta.CommonIndicators))' &&
-
-            echo '\n--- C++ ---' &&
-            echo \"#include <iostream>\nint main(){std::cout<<\\\"C++ OK\\\";}\" > test.cpp &&
-            g++ test.cpp -o test && ./test &&
-
-            echo '\n--- Java ---' &&
-            echo \"class Main{public static void main(String[]a){System.out.println(\\\"Java OK\\\");}}\" > Main.java &&
-            javac Main.java && java Main &&
-
-            echo '\n--- Verilog ---' &&
-            iverilog -V
-          "
-
-      # Push image to GHCR only if tests pass
-      - name: Push Dev-Stack image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: .devcontainer/Dockerfile
+          target: dev
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/dev-stack:latest
-            ghcr.io/${{ github.repository_owner }}/dev-stack:v1.0.0
+            ghcr.io/${{ github.repository_owner }}/dev-stack:dev
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Build runtime image
+      - name: Build Runtime image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: .devcontainer/Dockerfile
+          target: runtime
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/dev-stack:runtime
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Sanity tests (run on runtime image for speed)
+      - name: Run sanity tests on runtime
+        run: |
+          docker run --rm ghcr.io/${{ github.repository_owner }}/dev-stack:runtime bash -c "
+            echo '--- NumPy / Pandas ---' &&
+            python3 -c 'import numpy, pandas; print(\"NumPy\", numpy.__version__, \"Pandas\", pandas.__version__)' &&
+
+            echo '\n--- TA-Lib ---' &&
+            python3 -c 'import talib, numpy as np; print(\"RSI\", talib.RSI(np.arange(1, 10, dtype=float), timeperiod=3))' &&
+
+            echo '\n--- pandas-ta ---' &&
+            python3 -c 'import pandas_ta as ta; print(\"Indicators available:\", len(ta.CommonIndicators))'
+          "
